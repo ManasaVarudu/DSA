@@ -1,0 +1,69 @@
+/* Smallest Range subarray with k distinct elements
+We are given an array consisting of n integers and an integer k. We need to find the minimum range in array [l, r] (both l and r are inclusive) such that there are exactly k different numbers. If such subarray doesn’t exist print “Invalid k”.
+Examples: 
+Input : arr[] = { 1, 1, 2, 2, 3, 3, 4, 5} 
+           k = 3
+Output : 5 7
+Input : arr[] = { 1, 2, 2, 3} 
+            k = 2
+Output : 0 1
+Input : arr[] = {1, 1, 2, 1, 2}
+            k = 3
+Output : Invalid k
+Algorithm
+  1. intitialize i=0 and j=0, and a hashmap to store the frequency of the elements
+  2. increment j till hasmap.size()==k, store that range(i,j) in start and end variables respectively. This is the length of our sliding window.
+  3. Now we need to move the window one step foreward, hence we have to remove one element and add another element 
+  4.remove the arr[i] (or) decrease its frequency by 1 ( because array may contain duplicate values) value from the hashmap and increment i.
+  5. Before adding the other value to the hashmap, we have to check if the hashmap size is still k, this gives us the decreased range than the previous one.Update the start and end variables respectively
+  6. repeat the step 4 , as it gives the minimum range for the given sliding window and update start and end variables respectively.
+  7.Repeat from step 2 ( adding elements till hasmapsize()==k , this is a variable sliding window problem not fixed sliding window )*/
+
+
+//Program:
+
+import java.util.*;
+public class MyClass {
+    public static void SmallestRangeSubArray(int[] arr, int n, int k)
+    {
+        int i=0,j=0;
+        int start = 0 , end = n;
+        HashMap<Integer,Integer> hm = new HashMap<>();
+        while(j<n)
+        {
+        hm.put(arr[j], hm.getOrDefault(arr[j],0)+1);
+            ++j;
+          if(hm.size()!=k)
+            continue;
+        while(hm.size()==k)
+        {
+            int win_len = (j-1)-i+1;
+            int sub_len = end-start+1;
+            if(win_len < sub_len )
+            {
+                start = i;
+                end = j-1;
+            }
+           if(hm.get(arr[i])==1)
+            hm.remove(arr[i]);
+            else
+            hm.put(arr[i],hm.get(arr[i])-1);
+            ++i;
+          }
+        }
+        if(start==0 && end ==n)
+        System.out.println("Invalid Input");
+        else
+        System.out.println(start+" "+end);
+       }
+    public static void main(String args[]) 
+    {
+     Scanner sc = new Scanner(System.in);
+     int n = sc.nextInt();
+     int k = sc.nextInt();
+     int arr[] = new int[n];
+     for(int i=0;i<n;i++)
+     arr[i] = sc.nextInt();
+     SmallestRangeSubArray(arr,n,k);
+    }
+}
